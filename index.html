@@ -449,16 +449,55 @@
     "Appreciated. Honest feedback helps."
   ];
 
+  // ── STEP 1: paste your Master Key from jsonbin.io → API Keys
+  const JSONBIN_KEY = '69fe94ed8deb961168de3a01';
+  // ── STEP 2: leave this empty on first deploy. After first vote,
+  //            open the browser console, copy the bin ID logged there,
+  //            paste it here, and redeploy.
+  const BIN_ID = '';
+
   let votes = [0, 0, 0, 0];
   let voted = false;
 
-  function vote(idx) {
-    if (voted) return;
-    voted = true;
-    votes[idx]++;
+  async function loadVotes() {
+    if (!BIN_ID) return;
+    try {
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+        headers: { 'X-Master-Key': JSONBIN_KEY }
+      });
+      const data = await res.json();
+      if (data.record && data.record.votes) votes = data.record.votes;
+    } catch(e) {}
+  }
 
+  async function saveVotes() {
+    if (!JSONBIN_KEY || JSONBIN_KEY === 'YOUR_MASTER_KEY_HERE') return;
+    if (!BIN_ID) {
+      const res = await fetch('https://api.jsonbin.io/v3/b', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': JSONBIN_KEY,
+          'X-Bin-Name': 'blxckroze-poll'
+        },
+        body: JSON.stringify({ votes })
+      });
+      const data = await res.json();
+      console.log('Bin created! Paste this ID into BIN_ID:', data.metadata.id);
+    } else {
+      await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': JSONBIN_KEY
+        },
+        body: JSON.stringify({ votes })
+      });
+    }
+  }
+
+  function renderResults(idx) {
     const total = votes.reduce((a, b) => a + b, 0);
-
     document.getElementById('options').style.display = 'none';
 
     const bars = document.getElementById('result-bars');
@@ -481,19 +520,26 @@
 
     document.getElementById('vote-count').innerHTML = `<strong>${total}</strong> vote${total !== 1 ? 's' : ''} so far`;
     document.getElementById('thank-you-msg').innerHTML = `<strong>Thanks!</strong> ${messages[idx]}`;
+    document.getElementById('results').classList.add('visible');
 
-    const results = document.getElementById('results');
-    results.classList.add('visible');
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        labels.forEach((_, i) => {
-          const pct = total > 0 ? Math.round((votes[i] / total) * 100) : 0;
-          document.getElementById(`bar-${i}`).style.width = pct + '%';
-        });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      labels.forEach((_, i) => {
+        const pct = total > 0 ? Math.round((votes[i] / total) * 100) : 0;
+        document.getElementById(`bar-${i}`).style.width = pct + '%';
       });
-    });
+    }));
   }
+
+  async function vote(idx) {
+    if (voted) return;
+    voted = true;
+    await loadVotes();
+    votes[idx]++;
+    renderResults(idx);
+    await saveVotes();
+  }
+
+  loadVotes();
 </script>
 </body>
 </html>
