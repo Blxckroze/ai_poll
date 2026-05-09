@@ -34,6 +34,17 @@
     overflow-x: hidden;
   }
 
+  #bg-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
   /* GRAIN OVERLAY */
   body::before {
     content: '';
@@ -346,6 +357,10 @@
 </head>
 <body>
 
+<video id="bg-video" autoplay muted loop playsinline>
+  <source src="https://blxckroze.github.io/ai_poll/ai-mall-new.mp4" type="video/mp4">
+</video>
+
 <nav>
   <div class="wrap nav-inner">
     <div class="logo">blxck<span>roze</span> mall</div>
@@ -450,7 +465,7 @@
   ];
 
   // ── STEP 1: paste your Master Key from jsonbin.io → API Keys
-  const JSONBIN_KEY = '69fe94ed8deb961168de3a01';
+  const JSONBIN_KEY = 'YOUR_MASTER_KEY_HERE';
   // ── STEP 2: leave this empty on first deploy. After first vote,
   //            open the browser console, copy the bin ID logged there,
   //            paste it here, and redeploy.
