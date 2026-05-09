@@ -486,7 +486,7 @@
   }
 
   async function saveVotes() {
-    if (!JSONBIN_KEY || JSONBIN_KEY === 'YOUR_MASTER_KEY_HERE') return;
+    if (!JSONBIN_KEY || JSONBIN_KEY === '$2a$10$EdzI5Ajz6RL9P5uXWTQZouth261JuSYPfhh2VB.uR8wwuxSDusq.6') return;
     if (!BIN_ID) {
       const res = await fetch('https://api.jsonbin.io/v3/b', {
         method: 'POST',
