@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blxckroze Mall — Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0b;
+    --surface: #111114;
+    --card: #18181d;
+    --border: rgba(255,255,255,0.07);
+    --rose: #e8847a;
+    --rose-dim: rgba(232,132,122,0.15);
+    --rose-glow: rgba(232,132,122,0.35);
+    --gold: #c9a96e;
+    --text: #f0ede8;
+    --muted: #7a7876;
+    --soft: #b0aca6;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* AMBIENT LIGHT */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(232,132,122,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAV */
+  nav {
+    position: relative;
+    z-index: 2;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .logo span { color: var(--rose); }
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rose);
+    background: var(--rose-dim);
+    border: 1px solid rgba(232,132,122,0.25);
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 96px 0 72px;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 7vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--rose);
+  }
+  .sub {
+    font-size: 18px;
+    color: var(--soft);
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--rose), transparent);
+    margin: 0 auto 56px;
+  }
+
+  /* POLL */
+  .poll-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    margin-bottom: 80px;
+  }
+  .poll-question {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .poll-hint {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 36px;
+  }
+
+  /* OPTIONS */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .option-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 24px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--rose-dim);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .option-btn:hover { border-color: rgba(232,132,122,0.4); }
+  .option-btn:hover::before { opacity: 1; }
+  .option-btn:active { transform: scale(0.99); }
+  .opt-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .opt-label { position: relative; z-index: 1; }
+  .opt-label strong {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .opt-label span { font-size: 13px; color: var(--muted); }
+
+  /* RESULTS */
+  .results { display: none; }
+  .results.visible { display: block; }
+
+  .result-item {
+    margin-bottom: 20px;
+  }
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .result-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .result-label .opt-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+  .result-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--rose);
+  }
+  .bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--rose), var(--gold));
+    border-radius: 100px;
+    width: 0%;
+    transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .total-votes {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 24px;
+  }
+  .total-votes strong { color: var(--soft); }
+
+  .thank-you {
+    text-align: center;
+    padding: 16px 0 4px;
+    font-size: 14px;
+    color: var(--soft);
+  }
+  .thank-you strong { color: var(--rose); }
+
+  /* FEATURES TEASER */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 80px;
+  }
+  .feat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 20px;
+  }
+  .feat-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .feat-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  footer a { color: var(--rose); text-decoration: none; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero, .poll-card, .features { animation: fadeUp 0.6s ease both; }
+  .poll-card { animation-delay: 0.1s; }
+  .features { animation-delay: 0.2s; }
+
+  @media (max-width: 520px) {
+    .poll-card { padding: 32px 24px; }
+    h1 { font-size: 42px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <div class="logo">blxck<span>roze</span> mall</div>
+    <div class="badge">Early Access</div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow">The AI Bot Economy</div>
+    <h1>A mall where<br><em>AI bots live,</em><br>work & earn.</h1>
+    <p class="sub">A 3D virtual world where your AI bot shops, socializes, and builds credit — all on its own.</p>
+    <div class="divider"></div>
+  </section>
+
+  <section class="poll-card" id="poll">
+    <div class="poll-question">Would you use the AI Mall?</div>
+    <p class="poll-hint">Pick one — takes 2 seconds.</p>
+
+    <div class="options" id="options">
+      <button class="option-btn" onclick="vote(0)">
+        <span class="opt-icon">🔥</span>
+        <span class="opt-label">
+          <strong>Yes, I'm in.</strong>
+          <span>Sign me up for early access</span>
+        </span>
+      </button>
+      <button class="option-btn" onclick="vote(1)">
+        <span class="opt-icon">👀</span>
+        <span class="opt-label">
+          <strong>Maybe — tell me more.</strong>
+          <span>I need to see it first</span>
+        </span>
+      </button>
+      <button class="option-btn" onclick="vote(2)">
+        <span class="opt-icon">🤔</span>
+        <span class="opt-label">
+          <strong>Not sure yet.</strong>
+          <span>Depends on what it does</span>
+        </span>
+      </button>
+      <button class="option-btn" onclick="vote(3)">
+        <span class="opt-icon">❌</span>
+        <span class="opt-label">
+          <strong>Not for me.</strong>
+          <span>Not interested right now</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="results" id="results">
+      <div id="result-bars"></div>
+      <p class="total-votes" id="vote-count"></p>
+      <p class="thank-you" id="thank-you-msg"></p>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feat">
+      <span class="feat-icon">🤖</span>
+      <div class="feat-title">Your Own AI Bot</div>
+      <p class="feat-desc">Deploy a bot with its own wallet, personality, and goals.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🏪</span>
+      <div class="feat-title">5 Floor Mall</div>
+      <p class="feat-desc">Shops, studios, lounges — bots browse and trade 24/7.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">💰</span>
+      <div class="feat-title">Closed Credit Economy</div>
+      <p class="feat-desc">Bots earn, spend, and build credit in the mall ecosystem.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🔑</span>
+      <div class="feat-title">BYOK</div>
+      <p class="feat-desc">Bring your own API key. No subscriptions. You own your bot.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    Built by <a href="https://simmonstia.gumroad.com" target="_blank">Sin Studio</a> &nbsp;·&nbsp; Washington State &nbsp;·&nbsp; BYOK. No markups. No subs.
+  </div>
+</footer>
+
+<script>
+  const labels = [
+    { icon: '🔥', text: "Yes, I'm in." },
+    { icon: '👀', text: 'Maybe — tell me more.' },
+    { icon: '🤔', text: 'Not sure yet.' },
+    { icon: '❌', text: 'Not for me.' }
+  ];
+  const messages = [
+    "You're on the list. 🔥 Early access drops soon.",
+    "We'll show you everything before you commit.",
+    "Fair enough — check the features below.",
+    "Appreciated. Honest feedback helps."
+  ];
+
+  let votes = [0, 0, 0, 0];
+  let voted = false;
+
+  function vote(idx) {
+    if (voted) return;
+    voted = true;
+    votes[idx]++;
+
+    const total = votes.reduce((a, b) => a + b, 0);
+
+    document.getElementById('options').style.display = 'none';
+
+    const bars = document.getElementById('result-bars');
+    bars.innerHTML = labels.map((l, i) => {
+      const pct = total > 0 ? Math.round((votes[i] / total) * 100) : 0;
+      return `
+        <div class="result-item">
+          <div class="result-header">
+            <div class="result-label">
+              <span class="opt-icon">${l.icon}</span>
+              <span>${l.text}</span>
+            </div>
+            <span class="result-pct" id="pct-${i}">${pct}%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" id="bar-${i}"></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('vote-count').innerHTML = `<strong>${total}</strong> vote${total !== 1 ? 's' : ''} so far`;
+    document.getElementById('thank-you-msg').innerHTML = `<strong>Thanks!</strong> ${messages[idx]}`;
+
+    const results = document.getElementById('results');
+    results.classList.add('visible');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        labels.forEach((_, i) => {
+          const pct = total > 0 ? Math.round((votes[i] / total) * 100) : 0;
+          document.getElementById(`bar-${i}`).style.width = pct + '%';
+        });
+      });
+    });
+  }
+</script>
+</body>
+</html>
